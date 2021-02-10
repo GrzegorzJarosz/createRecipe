@@ -38,11 +38,18 @@ const FormSteps = () => {
     };
 
     const handleAddFields = (fieldName) => {
-        console.log('add');
+        const updatedRecipeControls = _.cloneDeep(recipeControls);
+        let fieldToOperate = _.get(updatedRecipeControls, fieldName);
+        fieldToOperate.value.push(Object.assign({}, recipeDefinition[fieldName].value[0]));
+        setRecipeControls(updatedRecipeControls);
     };
 
     const handleRemoveFields = (fieldName, i) => {
-        console.log('remove');
+        if (recipeControls[fieldName].value.length === 1) { return };
+        const updatedRecipeControls = _.cloneDeep(recipeControls);
+        let fieldToOperate = _.get(updatedRecipeControls, fieldName);
+        fieldToOperate.value.splice(i, 1);
+        setRecipeControls(updatedRecipeControls);
     };
 
 
