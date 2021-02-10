@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import { recipeDefinition } from './definitions';
 import Input from '../UI/Input/Input';
+import { FaTrashAlt } from 'react-icons/fa';
 
 const FormSteps = () => {
     const monitor = useRef(null);
@@ -131,7 +132,7 @@ const FormSteps = () => {
                             className=""
                             type="button"
                             onClick={() => handleRemoveFields(element.id, index)}
-                        > - </Button >
+                        ><FaTrashAlt style={{ color: '#ffffff' }} /></Button >
                     </Fragment >
                 );
             });
