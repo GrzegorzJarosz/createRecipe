@@ -120,7 +120,7 @@ const FormSteps = () => {
                 });
 
                 return (
-                    <Fragment key={index}>
+                    <div key={index} className='section-group'>
                         {subElToDispl}
                         <Button
                             className={'mr-2'}
@@ -133,7 +133,7 @@ const FormSteps = () => {
                             type="button"
                             onClick={() => handleRemoveFields(element.id, index)}
                         ><FaTrashAlt style={{ color: '#ffffff' }} /></Button >
-                    </Fragment >
+                    </div >
                 );
             });
 
