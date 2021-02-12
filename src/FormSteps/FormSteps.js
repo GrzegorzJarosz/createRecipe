@@ -35,6 +35,8 @@ const FormSteps = () => {
         const updatedRecipeControls = _.cloneDeep(recipeControls);
         let fieldToOperate = _.get(updatedRecipeControls, fieldName);
         fieldToOperate.value = e.target.value;
+        fieldToOperate.valid = checkValidity(e.target.value, fieldToOperate.validation);
+        fieldToOperate.touched = true;
         setRecipeControls(updatedRecipeControls);
     };
 
@@ -115,6 +117,8 @@ const FormSteps = () => {
                             value={el.config.value}
                             lab={el.id}
                             changed={(e) => handleInputChange(e, el.whoIs)}
+                            valid={el.config.valid}
+                            touched={el.config.touched}
                         />
                     );
                 });
@@ -155,11 +159,49 @@ const FormSteps = () => {
                     lab={element.id}
                     whoIs={element.whoIs}
                     changed={(e) => handleInputChange(e, element.whoIs)}
+                    valid={element.config.valid}
+                    touched={element.config.touched}
                 />
             )
         };
 
     });
+
+    const checkValidity = (value, rules) => {
+        if (!rules) {
+            return true
+        }
+        let isValid = true;
+        if (rules.required) {
+            isValid = value.trim() !== '' && isValid;
+        }
+        if (rules.minLength) {
+            isValid = value.length >= rules.minLength && isValid;
+        }
+        if (rules.numberType) {
+            isValid = !isNaN(value.trim()) && isValid;
+        }
+        return isValid;
+    };
+
+    //form validation
+    let validationStatus;
+    if (Array.isArray(formViewArray[currentPage].config)) {
+        let validSection = false;
+        formViewArray[currentPage].config.map((item) => {
+            for (let i = 0; i < item.length; i++) {
+                if (!item[i].config.valid) {
+                    validSection = false;
+                    break;
+                } else {
+                    validSection = true;
+                }
+            }
+        });
+        validationStatus = validSection;
+    } else {
+        validationStatus = formViewArray[currentPage].config.valid;
+    };
 
     let currFormView = formView[currentPage];
 
@@ -185,10 +227,10 @@ const FormSteps = () => {
 
             <Row className='mb-3 mt-3 justify-content-around'>
                 <Button variant="light" onClick={() => { switchPages(-1) }} disabled={formStatus.start}>prev</Button>
-                <Button variant="light" onClick={() => { switchPages(1) }} disabled={formStatus.finished}>next</Button>
+                <Button variant="light" onClick={() => { switchPages(1) }} disabled={formStatus.finished || !validationStatus}>next</Button>
             </Row>
             <Row >
-                <Col>{formStatus.finished ? <Button onClick={handleSubmit}>zakoncz</Button> : ''}</Col>
+                <Col>{(formStatus.finished && validationStatus) ? <Button onClick={handleSubmit}>zakoncz</Button> : ''}</Col>
             </Row>
 
         </Container>
