@@ -124,7 +124,10 @@ const FormSteps = () => {
                 });
 
                 return (
+
+
                     <div key={index} className='section-group'>
+
                         {subElToDispl}
                         <Button
                             className={'mr-2'}
@@ -141,27 +144,25 @@ const FormSteps = () => {
                 );
             });
 
-            return (
-                <>
-                    <p>{element.id}</p>
-                    {sectionOfFields}
-                </>
-            );
+            return (<><p>{element.id}</p>{sectionOfFields}</>);
 
         } else {
 
             return (
-                <Input
-                    key={element.id}
-                    elementType={element.config.elementType}
-                    elementConfig={element.config.elementConfig}
-                    value={element.config.value}
-                    lab={element.id}
-                    whoIs={element.whoIs}
-                    changed={(e) => handleInputChange(e, element.whoIs)}
-                    valid={element.config.valid}
-                    touched={element.config.touched}
-                />
+                <>
+                    <div className={'mb-3'}>{element.config.fieldDescr}</div>
+                    <Input
+                        key={element.id}
+                        elementType={element.config.elementType}
+                        elementConfig={element.config.elementConfig}
+                        value={element.config.value}
+                        lab={element.id}
+                        whoIs={element.whoIs}
+                        changed={(e) => handleInputChange(e, element.whoIs)}
+                        valid={element.config.valid}
+                        touched={element.config.touched}
+                    />
+                </>
             )
         };
 
@@ -216,7 +217,9 @@ const FormSteps = () => {
                     classNames="fade">
                     <div ref={monitor}>
                         <Row>
-                            <Col>Form</Col>
+                            <Col>
+                                <h1 className="mt-3 mb-5">Create Recipe</h1>
+                            </Col>
                         </Row>
                         <Row>
                             <Col>{currFormView}</Col>

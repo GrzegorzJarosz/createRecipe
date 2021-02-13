@@ -8,7 +8,6 @@ const Input = (props) => {
     switch (props.elementType) {
         case ('input'):
             inputElement = <Form.Group>
-                <Form.Label>{props.lab}</Form.Label>
                 <FormControl
                     {...props.elementConfig}
                     value={props.value}
@@ -20,7 +19,6 @@ const Input = (props) => {
             break;
         case ('textarea'):
             inputElement = <Form.Group>
-                <Form.Label>{props.lab}</Form.Label>
                 <Form.Control
                     as="textarea"
                     rows={3}
@@ -34,7 +32,6 @@ const Input = (props) => {
             break;
         case ('select'):
             inputElement = <Form.Group>
-                <Form.Label>{props.lab}</Form.Label>
                 <Form.Control
                     as="select"
                     value={props.value}
@@ -53,7 +50,6 @@ const Input = (props) => {
             break;
         default:
             inputElement = <Form.Group>
-                <Form.Label>{props.lab}</Form.Label>
                 <FormControl
                     {...props.elementConfig}
                     value={props.value}
