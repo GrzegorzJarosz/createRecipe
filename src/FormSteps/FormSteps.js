@@ -6,13 +6,16 @@ import { Button, Container, Row, Col } from 'react-bootstrap';
 import { recipeDefinition } from './definitions';
 import Input from '../UI/Input/Input';
 import { FaTrashAlt } from 'react-icons/fa';
+import Recipe from '../Recipe/Recipe';
 
 const FormSteps = () => {
     const monitor = useRef(null);
+    const recipeRef = useRef(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [formStatus, setFormStatus] = useState({
         start: true,
-        finished: false
+        finished: false,
+        recipeReady: false
     });
     const [recipeControls, setRecipeControls] = useState(Object.assign({}, recipeDefinition));
 
@@ -27,7 +30,7 @@ const FormSteps = () => {
             setCurrentPage(currentPage + param);
         }
 
-        const updatedFormStatus = { ...formStatus, start: start, finished: finished }
+        const updatedFormStatus = { ...formStatus, start: start, finished: finished, recipeReady: false }
         setFormStatus(updatedFormStatus);
     };
 
@@ -59,8 +62,14 @@ const FormSteps = () => {
     const handleSubmit = e => {
         e.preventDefault();
         console.log('done!');
+        const updatedFormStatus = { ...formStatus, recipeReady: true }
+        setFormStatus(updatedFormStatus)
     };
 
+    const closeRecipePreview = () => {
+        const updatedFormStatus = { ...formStatus, recipeReady: false }
+        setFormStatus(updatedFormStatus)
+    };
 
     const formViewArray = [];
     for (let key in recipeControls) {
@@ -189,7 +198,8 @@ const FormSteps = () => {
     let validationStatus;
     if (Array.isArray(formViewArray[currentPage].config)) {
         let validSection = false;
-        formViewArray[currentPage].config.map((item) => {
+
+        for (let item of formViewArray[currentPage].config) {
             for (let i = 0; i < item.length; i++) {
                 if (!item[i].config.valid) {
                     validSection = false;
@@ -198,17 +208,23 @@ const FormSteps = () => {
                     validSection = true;
                 }
             }
-        });
+        };
+
         validationStatus = validSection;
     } else {
         validationStatus = formViewArray[currentPage].config.valid;
     };
 
     let currFormView = formView[currentPage];
+    let recipeMonitor = <Recipe recipe={recipeControls} />
 
     return (
         <Container>
-
+            <Row>
+                <Col>
+                    <h1 className="mt-5 mb-5">Create Recipe</h1>
+                </Col>
+            </Row>
             <SwitchTransition mode="out-in">
                 <CSSTransition
                     nodeRef={monitor}
@@ -216,11 +232,6 @@ const FormSteps = () => {
                     timeout={500}
                     classNames="fade">
                     <div ref={monitor}>
-                        <Row>
-                            <Col>
-                                <h1 className="mt-3 mb-5">Create Recipe</h1>
-                            </Col>
-                        </Row>
                         <Row>
                             <Col>{currFormView}</Col>
                         </Row>
@@ -233,10 +244,22 @@ const FormSteps = () => {
                 <Button variant="light" onClick={() => { switchPages(1) }} disabled={formStatus.finished || !validationStatus}>next</Button>
             </Row>
             <Row >
-                <Col>{(formStatus.finished && validationStatus) ? <Button onClick={handleSubmit}>zakoncz</Button> : ''}</Col>
+                <Col className="d-flex justify-content-center mt-3">{(formStatus.finished && validationStatus) ? <Button onClick={handleSubmit}>Previev</Button> : ''}</Col>
             </Row>
 
-        </Container>
+            <CSSTransition
+                in={formStatus.recipeReady}
+                timeout={500}
+                classNames="fade"
+                unmountOnExit
+                nodeRef={recipeRef}>
+                <div className="recipe-container" ref={recipeRef}>
+                    <Button style={{ zIndex: '100' }} onClick={closeRecipePreview}>close preview</Button>
+                    {recipeMonitor}
+                </div>
+            </CSSTransition>
+
+        </Container >
     )
 }
 export default FormSteps;

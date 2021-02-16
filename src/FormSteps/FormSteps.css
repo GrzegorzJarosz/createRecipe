@@ -6,6 +6,15 @@
     margin: 7px;
 }
 
+.recipe-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: all 0.8s ease-out;
+    overflow: hidden;
+}
+
 .fade-enter {
     opacity: 0;
     transform: translateX(-30%);
